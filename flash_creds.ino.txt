@@ -1,0 +1,33 @@
+#include <ESP_EEPROM.h>
+
+struct NetworkCreds {
+  char networkName[32];
+  char networkPass[32];
+  byte collector_ip[4];
+  int collector_tcp_port;
+  int collector_udp_port;
+} networkCreds;
+
+void setup() {
+
+  Serial.begin(74880);
+  while (!Serial) {}
+  Serial.println();
+
+  EEPROM.begin(sizeof(NetworkCreds));
+
+  // set the EEPROM data ready for writing
+  EEPROM.put(0, creds);
+
+  // write the data to EEPROM
+  boolean ok = EEPROM.commit();
+  Serial.println((ok) ? "Commit OK" : "Commit failed");
+
+  EEPROM.get(0, creds);
+
+  Serial.print("EEPROM data read, networkName=");
+  Serial.println(creds.networkName);
+}
+
+void loop() {
+}
